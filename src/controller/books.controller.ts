@@ -6,22 +6,33 @@ import IResponse from "../interface/response.interface";
 export default class BookController {
   async createBook(bookData: IBook): Promise<IResponse> {
     try {
-      const createdBook = await BookModel.create(bookData);
-      return {
-        ok: true,
-        message: "Book created",
-        response: createdBook,
-        code: 201,
-      };
+        const existingBook = await BookModel.findOne({ title: bookData.title, author: bookData.author });
+        if (existingBook) {
+            return {
+                ok: false,
+                message: "A book with the same title and author already exists",
+                response: null,
+                code: 400, 
+            };
+        }
+
+        const createdBook = await BookModel.create(bookData);
+        return {
+            ok: true,
+            message: "Book created",
+            response: createdBook,
+            code: 201,
+        };
     } catch (error) {
-      return {
-        ok: false,
-        message: "Error creating book",
-        response: error,
-        code: 500,
-      };
+        return {
+            ok: false,
+            message: "Error creating book",
+            response: error,
+            code: 500,
+        };
     }
-  }
+}
+
 
   async getBookById(bookId: mongoose.Types.ObjectId): Promise<IResponse> {
     try {
