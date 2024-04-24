@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import BookModel from "../models/books.model"
 import { IBook } from "../interface/books.interface"
 import IResponse from "../interface/response.interface"
+import csvToJson from "csvtojson"
 
 export default class BookController {
   async createBook(bookData: IBook): Promise<IResponse> {
@@ -151,6 +152,45 @@ export default class BookController {
         message: "Error retrieving books by category",
         response: error,
         code: 500,
+      }
+    }
+  }
+
+  async cargaMasiva(file: Express.Multer.File): Promise<IResponse> {
+    try{
+      if (!file || !file.buffer){
+        return{
+          ok: false,
+          message: "Info doesn't exist",
+          response: null,
+          code: 400
+        }
+      }
+      const fileContent = file.buffer.toString()
+      const jsonArray = await csvToJson().fromString(fileContent)
+
+      jsonArray.forEach((book:any) => {
+        book.price = Number (book.price)
+        book.quantity = Number (book.quantity)
+        book.categories = {
+          name: book.categories
+        }
+      })
+
+      const books = await BookModel.insertMany(jsonArray)
+ 
+      return{
+        ok: true,
+        message: "Books created",
+        response: books,
+        code: 200
+      }
+    } catch (error) {
+      return{
+        ok: false,
+        message: "Error creating books",
+        response: error,
+        code: 500
       }
     }
   }
