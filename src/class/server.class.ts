@@ -23,7 +23,7 @@ export default class Server {
 
     async start(): Promise<void> {
         try {
-            await this.mongodb.connectDB() // Conectar a la base de datos
+            await this.mongodb.connectDB()
             await this.httpServer.listen(this.port)
             logger.info(`Server running on port ${this.port}`)
         } catch (error) {
@@ -34,7 +34,7 @@ export default class Server {
 
     async stop(): Promise<void> {
         try {
-            await this.mongodb.disconnect() // Desconectar de la base de datos
+            await this.mongodb.disconnect()
             await this.httpServer.close()
             logger.info(`Server stopped`)
         } catch (error) {
