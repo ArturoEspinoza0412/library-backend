@@ -4,7 +4,7 @@ import express from 'express'
 import routes from './routes'
 
 async function configureServer() {
-    const server = Server.getInstance()
+    const server = Server.instance
 
     server.getApp().enable('trust proxy')
 

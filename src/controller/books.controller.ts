@@ -17,6 +17,7 @@ export default class BookController {
   async createBook(bookData: IBook): Promise<IResponse> {
 
     try {
+      this.connection = this.server.getApp().locals.dbConnection
       const existingBook = await BookModel.findOne({ title: bookData.title, author: bookData.author })
       if (existingBook) {
         return {
@@ -27,7 +28,6 @@ export default class BookController {
         }
       }
 
-      this.connection = this.server.getApp().locals.dbConnection
 
       const createdBook = await BookModel.create(bookData)
       return {
@@ -211,6 +211,8 @@ export default class BookController {
 
   async cargaMasiva(file: Express.Multer.File): Promise<IResponse> {
     try {
+      this.connection = this.server.getApp().locals.dbConnection
+      
       if (!file || !file.buffer) {
         return {
           ok: false,
@@ -220,7 +222,6 @@ export default class BookController {
         }
       }
 
-      this.connection = this.server.getApp().locals.dbConnection
 
       const fileContent = file.buffer.toString()
       const jsonArray = await csvToJson().fromString(fileContent)
