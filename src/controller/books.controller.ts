@@ -45,7 +45,7 @@ export default class BookController {
       }
     } finally {
       if (this.connection) {
-        await this.server.getApp().locals.dbConnection.release(this.connection) // Liberamos la conexión
+        await this.server.getApp().locals.dbConnection.release(this.connection)
       }
     }
   }
