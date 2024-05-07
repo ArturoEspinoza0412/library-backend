@@ -13,7 +13,11 @@ router.post('/createBook', async (req: Request, res: Response) => {
     const response = await bookController.createBook(req.body)
     res.status(response.code).json(response)
   } catch (error) {
-    res.status(500).json({ ok: false, message: 'Internal Server Error', error })
+    res.status(500).json({ 
+      ok: false, 
+      message: 'Internal Server Error', 
+      error 
+    })
   }
 })
 
